@@ -71,6 +71,14 @@
             ]
             ++ modules;
         };
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
+      };
+      bevyDeps = with pkgs; [
+        udev alsa-lib vulkan-loader
+        xorg.libX11 xorg.libXcursor xorg.libXi xorg.libXrandr # To use the x11 feature
+        libxkbcommon wayland # To use the wayland feature
+      ];
     in {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
@@ -81,6 +89,25 @@
           nixos-wsl.nixosModules.wsl
           ./wsl.nix
         ];
+      };
+      
+      devShells.x86_64-linux.default = pkgs.mkShell {
+        depsBuildBuild = [
+          pkgs.pkgsCross.mingwW64.stdenv.cc
+        ];
+        nativeBuildInputs = [ 
+          pkgs.pkg-config
+          pkgs.clang
+          pkgs.pkgsCross.mingwW64.buildPackages.gcc
+        ];
+        buildInputs = bevyDeps;
+        LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath bevyDeps;
+        CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS = "-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib";
+
+        shellHook = ''
+         # Initialize Starship prompt
+         eval "$(starship init bash)"
+        '';
       };
     };
 }
