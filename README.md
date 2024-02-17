@@ -1,4 +1,14 @@
-# nixos-wsl-starter
+# NixOS-WSL-BEVY
+Forked from [nixos-wsl-starter](https://github.com/LGUG2Z/nixos-wsl-starter)
+
+## What's new
+A new build environment was configured on `flakes.nix` so WSL2 can cross-compile Beby apps targeting Windows Native.
+
+After applying the configurations from this [Quickstart](#-Quickstart), you will be able to run `devsh` in the terminal to enter a build environment with all the necessary dependencies for cross compilation.
+
+# Follow the original instructions from [nixos-wsl-starter](https://github.com/LGUG2Z/nixos-wsl-starter)
+#### (UPDATED: Quickstart `git clone <this-url>` was changed to refer to this fork)
+#### (UPDATED: Simple `rustup` instructions to start compiling Beby apps)
 
 This repository is intended to be a sane, batteries-included starter template
 for running a LunarVim-powered NixOS development environment on WSL.
@@ -80,7 +90,7 @@ sudo nix-channel --update
 * Get a copy of this repo (you'll probably want to fork it eventually):
 ```bash
 nix-shell -p git neovim
-git clone https://github.com/LGUG2Z/nixos-wsl-starter.git /tmp/configuration
+git clone https://github.com/ChouzArt/nixos-wsl-bevy.git /tmp/configuration
 cd /tmp/configuration
 ```
 
@@ -110,6 +120,54 @@ sudo nixos-rebuild switch --flake ~/configuration
 ```
 
 Note: If developing in Rust, you'll still be managing your toolchains and components like `rust-analyzer` with `rustup`!
+
+## Bevy Quickstart
+* Set the Rust default toolchain:
+```bash
+rustup default stable 
+```
+
+* Add Windows as a supported target:
+```bash
+rustup target add x86_64-pc-windows-gnu
+```
+
+* Add the following configuration to your Beby project:
+`<project-folder>/.cargo/config.toml`
+```toml
+[target.x86_64-pc-windows-gnu]
+linker = "x86_64-w64-mingw32-gcc"
+```
+
+* Run our bash shell that provides the build environment for compiling to Windows Native:
+```bash
+devsh
+```
+To compile to Windows Native, please refer to the `Working in WSL2` chapter from [Unofficial Bevy Cheat Book](https://bevy-cheatbook.github.io/platforms/windows/wsl2.html):
+> ### Cross-compiling to run Windows Native
+
+> The recommended way to run your Bevy app from WSL is to [cross-compile for
+Windows](https://bevy-cheatbook.github.io/setup/cross/linux-windows.html). The Windows EXE you build inside of WSL2 can
+be run just fine from the Linux commandline, and it will seamlessly run on the
+host system! This way, you don't need any GPU drivers or GUI support inside
+your WSL2 Linux environment. Also, you will be running and testing the Windows
+build of your game, so you can see how it will really perform on Windows.
+It will run with full performance and use your host Windows GPU drivers.
+
+>Note that when you run Windows binaries from WSL2, they don't get the Linux
+environment variables. `cargo run` does not just work, because your Bevy game
+will look for its `assets` folder in the path where the EXE is (which would be
+in the `target` build output folder). My simple solution is to just copy the
+EXE into the project folder after building, and run it directly from there.
+For non-Bevy Rust projects, this would be unnecessary.
+
+>The process can be automated with a little script, to use instead of `cargo run`:
+```sh
+#!/bin/sh
+cargo build --target x86_64-pc-windows-gnu &&
+cp target/x86_64-pc-windows-gnu/debug/<...>/<your-game-name>.exe . &&
+exec ./<your-game-name>.exe "$@"
+```
 
 ## Project Layout
 
