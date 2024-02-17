@@ -132,8 +132,19 @@ rustup default stable
 rustup target add x86_64-pc-windows-gnu
 ```
 
-* Add the following configuration to your Beby project:
-`<project-folder>/.cargo/config.toml`
+* Try one of the example games. Make a shallow copy of the Bevy repo:
+```bash
+git clone --depth 1 https://github.com/bevyengine/bevy
+```
+
+* Navigate to the new "bevy" folder
+```bash
+cd bevy
+```
+
+* Configure the linker for the Beby project. Create the following file and add this code:
+
+`<beby-project-path>/.cargo/config.toml`
 ```toml
 [target.x86_64-pc-windows-gnu]
 linker = "x86_64-w64-mingw32-gcc"
@@ -143,7 +154,21 @@ linker = "x86_64-w64-mingw32-gcc"
 ```bash
 devsh
 ```
-To compile to Windows Native, please refer to the `Working in WSL2` chapter from [Unofficial Bevy Cheat Book](https://bevy-cheatbook.github.io/platforms/windows/wsl2.html):
+
+* Build any of the examples. Let's compile the `breakout` game.
+
+  The first build can take several minutes, depending on your machine.
+```bash
+cargo build --target x86_64-pc-windows-gnu --example breakout
+```
+
+* Copy the executable to the project's root and you are ready to run it !
+```bash
+cp target/x86_64-pc-windows-gnu/debug/examples/breakout.exe .
+exec ./breakout.exe "$@"
+```
+
+Please refer to the `Working in WSL2` chapter from [Unofficial Bevy Cheat Book](https://bevy-cheatbook.github.io/platforms/windows/wsl2.html):
 > ### Cross-compiling to run Windows Native
 
 > The recommended way to run your Bevy app from WSL is to [cross-compile for
