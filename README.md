@@ -150,6 +150,23 @@ cd bevy
 linker = "x86_64-w64-mingw32-gcc"
 ```
 
+* Currently, WSL2 to Windows compilation fails in Bevy 0.12, a temporary fix is needed (more info on this [issue](https://github.com/bevyengine/bevy/issues/10425)).
+
+Add this at `<beby-project-path>/Cargo.toml` under `[dev-dependencies]`
+```toml
+[dev-dependencies]
+blake3 = { version = "1.5", features=["pure"] }
+```
+
+* You might also want to add the following optimizations to `<beby-project-path>/Cargo.toml` (refer to [Compile with Performance Optimizations](https://bevyengine.org/learn/quick-start/getting-started/setup/#compile-with-performance-optimizations))
+```toml
+[profile.dev]
+opt-level = 1 # Enable a small amount of optimization in debug mode
+
+[profile.dev.package."*"]
+opt-level = 3 # Enable high optimizations for dependencies (incl. Bevy), but not for our code.
+```
+
 * Run our bash shell that provides the build environment for compiling to Windows Native:
 ```bash
 devsh
