@@ -172,6 +172,7 @@ in {
         #     insteadOf = "https://gitlab.com";
         #   };
         # };
+        core.hooksPath = toString ./git-hooks;
         push = {
           default = "current";
           autoSetupRemote = true;

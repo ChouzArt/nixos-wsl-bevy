@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Path to the file you want to check
+FILE="secrets.json"
+
+# Check if the file is staged for commit
+if git diff --cached --name-only | grep --quiet "$FILE"; then
+  echo "Error: Attempt to commit $FILE detected."
+  echo "Please remove $FILE from the staging area or use another method to manage secrets."
+  exit 1
+fi
