@@ -142,14 +142,6 @@ git clone --depth 1 https://github.com/bevyengine/bevy
 cd bevy
 ```
 
-* Configure the linker for the Beby project. Create the following file and add this code:
-
-`<beby-project-path>/.cargo/config.toml`
-```toml
-[target.x86_64-pc-windows-gnu]
-linker = "x86_64-w64-mingw32-gcc"
-```
-
 * Currently, WSL2 to Windows compilation fails in Bevy 0.12, a temporary fix is needed (more info on this [issue](https://github.com/bevyengine/bevy/issues/10425)).
 
 Add this at `<beby-project-path>/Cargo.toml` under `[dev-dependencies]`

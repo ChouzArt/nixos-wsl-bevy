@@ -102,8 +102,9 @@
         ];
         buildInputs = bevyDeps;
         LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath bevyDeps;
+        CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "x86_64-w64-mingw32-gcc";
         CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS = "-L native=${pkgs.pkgsCross.mingwW64.windows.pthreads}/lib";
-
+        
         shellHook = ''
          # Initialize Starship prompt
          eval "$(starship init bash)"
