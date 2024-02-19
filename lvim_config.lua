@@ -32,7 +32,7 @@ lvim.keys.normal_mode["-"] = ":split<CR>"
 -- -- Use which-key to add extra bindings with the leader-key prefix
 -- lvim.builtin.which_key.mappings["W"] = { "<cmd>noautocmd w<cr>", "Save without formatting" }
 -- lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
--- lvim.builtin.which_key.mappings["f"] = { "<cmd>Telescope find_files theme=ivy<CR>", "Find files" }
+lvim.builtin.which_key.mappings["f"] = { "<cmd>Telescope find_files theme=ivy<CR>", "Find files" }
 
 
 -- -- Change theme settings
@@ -114,14 +114,6 @@ lvim.builtin.treesitter.auto_install = true
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
-
-require('telescope.builtin').find_files({
-  theme = "ivy",
-  -- layout_strategy='horizontal',
-  -- layout_config={width=0.5},
-  -- find_command = { 'rg', '--files', '--iglob', '!.git', '--hidden' },
-  -- previewer = false
-})
 
 -- require('telescope').setup({
 --   defaults = {
